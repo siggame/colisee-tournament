@@ -38,7 +38,7 @@ export function createGame(teams: any[]): Promise<any> {
     });
 }
 
-export function getFinishedGame(id: number): Promise<any> {
+export function getFinishedGameResult(id: number): Promise<any> {
     return new Promise((resolve, reject) => {
         query('game').where({
             id: id,
@@ -55,6 +55,7 @@ export function getFinishedGame(id: number): Promise<any> {
                         else {
                             accum["loser"] = team_game.team_id;
                         }
+                        return accum;
                     }, {});
                 })
         })

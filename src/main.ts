@@ -23,6 +23,7 @@ app.prepareTournament(true, false)
             match => {
                 return db.createGame(match.teams)
                     .then(game => {
+                        //TODO: how THE FUCK do I wait until I get a result
                         return app.poll(game.id);
                     })
                     .catch(err => {

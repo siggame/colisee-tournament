@@ -21,7 +21,7 @@ export class App {
     poll(id: number) {
         return new Promise((resolve, reject) => {
             function recursive_poller() {
-                return () => db.getFinishedGame(id)
+                return () => db.getFinishedGameResult(id)
                     .then(result => {
                         if (result === null) {
                             setTimeout(recursive_poller(), 250);

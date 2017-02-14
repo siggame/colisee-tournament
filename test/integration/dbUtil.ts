@@ -28,16 +28,38 @@ describe('Database Utility', function () {
 
     it('should be able to get a finished game', function () {
         return db.createGame([1, 2])
-            .then(game => {
-                setTimeout(() => db.query('game')
+            .then(game =>
+                db.query('game')
                     .where({ id: game.id })
-                    .update({ status: "finished" }), 500);
-                return db.getFinishedGame(game.id);
-            })
-            .then(game => {
-                chai.expect(game).to.exist;
-                chai.expect(game).has.property('id');
-            })
+                    .update({ status: "finished" })
+                    .then(_ =>
+                        db.query("team_game")
+                            .where({ game_id: game.id })
+                            .then(team_games => {
+                                let winner = Math.floor(Math.random() * 2) % 2;
+                                let ps = team_games.map(team_game => {
+                                    winner ^= 1;
+                                    return db.query("team_game")
+                                        .where({ team_id: team_game.team_id, game_id: game.id })
+                                        .update({ winner: Boolean(winner ^ 1) })
+                                        .catch(console.error);
+                                });
+                                return Promise.all(ps)
+                                    .catch(console.error);
+                            })
+                    )
+                    .then(_ =>
+                        db.getFinishedGameResult(game.id)
+                            .then(result => {
+                                chai.expect(result).to.exist;
+                                chai.expect(result).has.property('winner');
+                            }))
+            )
     })
 
+    after("Clean database", () => {
+        db.query("team_game").where("*").delete();
+        db.query("game").where("*").delete();
+        db.query("team").where("*").delete();
+    })
 });
