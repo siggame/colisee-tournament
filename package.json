@@ -4,12 +4,13 @@
   "description": "Micro-service responsible for scheduling games for SIG-Game Colisee tournaments",
   "main": "src/main.js",
   "scripts": {
+    "build": "tsc",
+    "clean": "find src test -name *.js -exec rm {} +",
+    "docs": "apidoc --input src/ --output docs/",
     "start": "node src/main.js",
     "setup": "npm install",
-    "build": "tsc",
-    "docs": "apidoc --input src/ --output docs/",
     "pretest": "npm run build",
-    "test": "mocha test/ && mocha test/unit && mocha test/integration"
+    "test": "mocha test/"
   },
   "repository": {
     "type": "git",
@@ -32,19 +33,19 @@
     "@types/node": "^7.0.5",
     "@types/winston": "^2.2.0",
     "apidoc": "^0.17.5",
-    "body-parser": "^1.16.0",
     "chai": "^3.5.0",
+    "mocha": "^3.2.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.16.0",
     "cors": "^2.8.1",
+    "dotenv": "^4.0.0",
     "express": "^4.14.1",
     "knex": "^0.12.6",
     "lodash": "^4.17.4",
-    "mocha": "^3.2.0",
+    "pg": "^6.1.2",
+    "tourneyjs": "file:///Users/user404d/Programming/MST/SIG-Game/tourneyjs",
     "typescript": "^2.1.5",
     "winston": "^2.3.1"
-  },
-  "dependencies": {
-    "dotenv": "^4.0.0",
-    "pg": "^6.1.2",
-    "tourneyjs": "file:///Users/user404d/Programming/MST/SIG-Game/tourneyjs"
   }
 }

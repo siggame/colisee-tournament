@@ -15,53 +15,70 @@ export const query = knexModule({
 
 export function getTeams() {
     return new Promise((resolve, reject) => {
-        query('team').all()
+        query.select().from('team')
             .then(resolve)
             .catch(reject);
     });
 }
 
 export function createGame(teams: any[]): Promise<any> {
+    if (teams.length < 2) throw new Error("Not enough teams.")
     return new Promise((resolve, reject) => {
         query('game').insert({}, '*')
             .then(rows => rows[0])
             .then((game) => {
                 // Promises to insert team_game
-                const ps = teams.map((team) => {
-                    return query('team_game').insert({ team_id: team, game_id: game.id }, '*')
-                });
+                const ps = teams.map((team) =>
+                    new Promise((resolve, reject) =>
+                        query('team_game').insert({ team_id: team, game_id: game.id })
+                            .then(resolve)
+                            .catch(reject)
+                    ));
                 return Promise.all(ps)
                     .then(_ => game);
             })
             .then(resolve)
             .catch(reject);
-    });
+    })
 }
 
 export function getFinishedGameResult(id: number): Promise<any> {
     return new Promise((resolve, reject) => {
-        query('game').where({
+        query.select().from('game').where({
             id: id,
             status: "finished"
         }).then(games => {
             if (games.length === 0) return null;
+            return new Promise((resolve, reject) => {
+                query('team_game')
+                    .where({ game_id: id })
+                    .then(team_games => {
+                        // console.log(team_games)
+                        if (team_games.length < 2) return null;
 
-            return query('team_game').where({ game_id: games[0].id })
-                .then(team_games => {
-                    return team_games.reduce((accum, team_game) => {
-                        if (team_game.winner) {
-                            accum["winner"] = team_game.team_id;
-                        }
-                        else {
-                            accum["loser"] = team_game.team_id;
-                        }
-                        return accum;
-                    }, {});
-                })
+                        const unfinished_game = team_games.reduce((accum, team_game) =>
+                            accum || team_game.winner === null
+                            , false)
+
+                        if (unfinished_game) return null;
+
+                        return team_games.reduce((accum, team_game) => {
+                            if (team_game.winner) {
+                                accum["winner"] = team_game.team_id;
+                            }
+                            else {
+                                accum["loser"] = team_game.team_id;
+                            }
+                            return accum;
+                        }, {});
+                    })
+                    .then(resolve)
+                    .catch(reject)
+            })
         })
             .then(resolve)
             .catch(reject);
-    });
+    })
 }
 
 

@@ -1,3 +1,5 @@
 # Compiled Javascript
 node_modules/
 *.js
+*.log
+.vagrant/*

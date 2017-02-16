@@ -10,10 +10,10 @@ env:
 
 before_script:
   - npm run setup
-  - docker run --name matchmaker-db --publish 5433:5432 --detach siggame/colisee-db
+  - docker run --name tournament-db --publish 5433:5432 --detach siggame/colisee-db
 
 script:
   - npm run test
 
 after_script:
-  - docker stop matchmaker-db
+  - docker stop tournament-db
