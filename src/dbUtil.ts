@@ -26,17 +26,12 @@ export function createGame(teams: any[]): Promise<any> {
     return new Promise((resolve, reject) => {
         query('game').insert({}, '*')
             .then(rows => rows[0])
-            .then((game) => {
+            .then((game) =>
                 // Promises to insert team_game
-                const ps = teams.map((team) =>
-                    new Promise((resolve, reject) =>
-                        query('team_game').insert({ team_id: team, game_id: game.id })
-                            .then(resolve)
-                            .catch(reject)
-                    ));
-                return Promise.all(ps)
-                    .then(_ => game);
-            })
+                Promise.all(teams.map((team) =>
+                    query('team_game').insert({ team_id: team, game_id: game.id })
+                )).then(_ => game)
+            )
             .then(resolve)
             .catch(reject);
     })
@@ -53,7 +48,6 @@ export function getFinishedGameResult(id: number): Promise<any> {
                 query('team_game')
                     .where({ game_id: id })
                     .then(team_games => {
-                        // console.log(team_games)
                         if (team_games.length < 2) return null;
 
                         const unfinished_game = team_games.reduce((accum, team_game) =>
