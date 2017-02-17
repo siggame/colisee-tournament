@@ -5,12 +5,16 @@ Vagrant.configure("2") do |config|
 
   config.vm.box = "ubuntu/xenial64"
 
+  # ruby code to find project name
   service_name = File.basename(__dir__)
 
+  # assign vagrant vm the project name
   config.vm.define service_name do |t|
   end
 
+  # disable default behavior
   config.vm.synced_folder ".", "/vagrant", disabled: true
+  # sync project into folder under home directory
   config.vm.synced_folder ".", "/home/ubuntu/#{service_name}"
   
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
@@ -24,6 +28,6 @@ Vagrant.configure("2") do |config|
     echo "export NVM_DIR=$HOME/.nvm" >> $HOME/.profile
     echo "[ -s \"$NVM_DIR/nvm.sh\" ] && \. \"$NVM_DIR/nvm.sh\"" >> $HOME/.profile
     nvm install node
-    cd $HOME/#{service_name} && npm install
+    cd $HOME/#{service_name} && npm run setup
   SHELL
 end
