@@ -6,7 +6,7 @@ services:
 language: nodejs
 
 nodejs:
-  - "6.1.x"
+  - "6.1"
 
 env:
   - POSTGRES_PORT=5433
