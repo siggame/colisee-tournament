@@ -3,9 +3,9 @@ sudo: required
 services:
   - docker
 
-language: nodejs
+language: node_js
 
-nodejs:
+node_js:
   - node
 
 env:
