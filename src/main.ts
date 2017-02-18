@@ -27,7 +27,7 @@ function error(match, err) {
 }
 
 export default function () {
-  return app.prepareTournament(true, true)
+  return app.prepareTournament({ with_bronze_final: true, randomize: true })
     .then((tourney: single): single => {
       tourney.once("on_finished", () => {
         console.log("FINISHED: ", tourney.results)

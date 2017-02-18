@@ -53,18 +53,18 @@ export default function () {
                     .update({ status: "finished" })
                     .then()
                 ])
-              })).then(_ => setTimeout(mockWorkers(), 10))
+              })).then(_ => setImmediate(mockWorkers()))
             })
           })
           //spit out error but continue to try and process matches
           .catch(err => {
             console.log("MOCK ERROR: ", err)
-            setTimeout(mockWorkers(), 10)
+            setImmediate(mockWorkers())
           })
       }
     }
 
-    let initialTeams = Array(512).fill(null).map((_, i) => {
+    let initialTeams = Array(257).fill(null).map((_, i) => {
       return { gitlab_id: i + 1 }
     })
 
@@ -82,7 +82,7 @@ export default function () {
           tourney.once("on_finished", () => {
             done()
           })
-          setTimeout(mockWorkers(), 10)
+          setImmediate(mockWorkers())
         })
         .catch(err => {
           chai.expect(err).to.not.exist

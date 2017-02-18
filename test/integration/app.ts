@@ -20,7 +20,7 @@ export default function () {
     it("should be able to prepare tournament", function () {
       const app = new App();
 
-      return app.prepareTournament(false, false)
+      return app.prepareTournament()
         .then(tourney => chai.expect(tourney).to.exist)
     })
 

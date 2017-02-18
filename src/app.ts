@@ -1,19 +1,19 @@
 const _ = require('lodash');
 import * as logger from "./logger";
 import * as db from "./dbUtil";
-import { SingleElimination as single } from "../node_modules/tourneyjs";
+import { SingleElimination as single, Settings as settings } from "../node_modules/tourneyjs";
 
 export class App {
   tournament: single;
 
   constructor() { }
 
-  prepareTournament(with_bronze: boolean, randomize: boolean): Promise<single> {
+  prepareTournament(settings?: settings): Promise<single> {
     return new Promise((resolve, reject) => {
       db.getTeams()
         .then((teams: any[]) => {
           const team_ids = teams.map((team) => { return team.id });
-          this.tournament = new single(team_ids, with_bronze, randomize);
+          this.tournament = new single(team_ids, settings);
           return this.tournament
         })
         .then(resolve)
