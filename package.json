@@ -10,7 +10,7 @@
     "start": "node src/main.js",
     "setup": "npm install",
     "pretest": "npm run build",
-    "test": "mocha test/"
+    "test": "mocha --colors test/"
   },
   "repository": {
     "type": "git",
