@@ -7,10 +7,13 @@
     "build": "tsc",
     "clean": "find src test -name *.js -exec rm {} +",
     "docs": "apidoc --input src/ --output docs/",
-    "start": "node src/main.js",
+    "start": "npm run quick-start",
     "setup": "npm install",
+    "prestart": "npm run build",
     "pretest": "npm run build",
-    "test": "mocha --colors test/"
+    "quick-start": "node src/main.js",
+    "quick-test": "mocha --colors test/",
+    "test": "npm run quick-test"
   },
   "repository": {
     "type": "git",
@@ -44,8 +47,8 @@
     "knex": "^0.12.6",
     "lodash": "^4.17.4",
     "pg": "^6.1.2",
-    "tourneyjs": "~0.0.2",
-    "typescript": "^2.1.5",
+    "tourneyjs": "~0.0.3",
+    "typescript": "^2.2.0",
     "winston": "^2.3.1"
   }
 }
