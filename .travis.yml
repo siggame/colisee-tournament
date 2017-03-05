@@ -5,7 +5,7 @@ services:
 
 before_script:
   - docker build -t siggame/colisee-tournament .
-  - docker run --name tournament-db --publish 5433:5432 --detach siggame/colisee-db
+  - docker run --name tournament-db --publish 5433:5432 --detach siggame/colisee-db:stable
 
 script:
   - docker run --rm -e POSTGRES_PORT=5433 --network host siggame/colisee-tournament npm run test
