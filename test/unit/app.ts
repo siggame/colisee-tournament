@@ -1,10 +1,10 @@
-import * as chai from 'chai';
-import { App } from '../../src/app';
+import * as chai from "chai";
+import { App } from "../../src/app";
 
 export default function () {
-  describe("Tournament App", () => {
+  describe("| App", () => {
 
-    it('should be constructable', () => {
+    it("should be constructable", () => {
       const app = new App();
     })
   })

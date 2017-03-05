@@ -3,35 +3,35 @@ import * as chai from "chai";
 
 export default function () {
 
-  describe('Database Tests', function () {
+  describe("| Database", () => {
 
     const initialTeams = Array(3).fill(null).map((_, i) => {
       return { gitlab_id: i + 1 }
     })
 
-    before('Populate the database with users', function () {
+    before("Populate the database with users", function () {
       return Promise.all(initialTeams.map((team) =>
         db.query("team").insert({ gitlab_id: team.gitlab_id })
           .then(_ => { })
       ))
     })
 
-    it('should be able to create a game', function () {
+    it("should be able to create a game", function () {
       return db.getTeams().then((teams: any[]) => {
         const ids = teams.slice(0, 2).map(team => team.id)
         return db.createGame(ids)
           .then(game => {
             chai.expect(game).to.exist;
-            chai.expect(game).has.property('id');
+            chai.expect(game).has.property("id");
           })
       })
     })
 
-    it('should be able to get a finished game', function () {
+    it("should be able to get a finished game", function () {
       return db.getTeams().then((teams: any[]) => {
         const ids = teams.slice(0, 2).map(team => team.id)
         return db.createGame(ids).then(game =>
-          db.query('game')
+          db.query("game")
             .where({ id: game.id })
             .update({ status: "finished" })
             .then(_ =>
@@ -51,7 +51,7 @@ export default function () {
               db.getFinishedGameResult(game.id)
                 .then(result => {
                   chai.expect(result).to.exist;
-                  chai.expect(result).has.property('winner');
+                  chai.expect(result).has.property("winner");
                 })))
       })
     })

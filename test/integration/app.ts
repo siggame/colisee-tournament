@@ -1,16 +1,16 @@
-import * as chai from 'chai';
+import * as chai from "chai";
 import * as db from "../../src/dbUtil";
 import { App } from "../../src/app";
-const _ = require('lodash');
+const _ = require("lodash");
 
 export default function () {
-  describe("Tournament App", () => {
+  describe("| App", () => {
 
     const initialTeams = Array(3).fill(null).map((_, i) => {
       return { gitlab_id: i + 1 }
     })
 
-    before('Populate the database with users', function () {
+    before("Populate the database with users", function () {
       return Promise.all(initialTeams.map((team) =>
         db.query("team").insert({ gitlab_id: team.gitlab_id })
           .then(_ => { })
@@ -24,7 +24,7 @@ export default function () {
         .then(tourney => chai.expect(tourney).to.exist)
     })
 
-    it('should be able to poll for updated game', () => {
+    it("should be able to poll for updated game", () => {
       const app = new App();
 
       function updateTeamGames(team_games) {
@@ -43,7 +43,7 @@ export default function () {
         return db.createGame(ids).then(game => {
           // mock results
           setTimeout(_ =>
-            db.query('team_game')
+            db.query("team_game")
               .where({ game_id: game.id })
               .then((team_games: any[]) => {
                 updateTeamGames(team_games)
@@ -51,7 +51,7 @@ export default function () {
             250);
           // mock game over
           setTimeout(_ =>
-            db.query('game')
+            db.query("game")
               .where({ id: game.id })
               .update({ status: "finished" })
               .then(_ => { }),

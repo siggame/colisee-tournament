@@ -1,11 +1,11 @@
 import app from "./app"
-import available from "./available"
+import connection from "./connection"
 import dbUtil from "./dbUtil"
 import main from "./main"
 
 export default function () {
-  describe("Integration Tests", function () {
-    available()
+  describe("Integration", function () {
+    connection()
     app()
     dbUtil()
     main()

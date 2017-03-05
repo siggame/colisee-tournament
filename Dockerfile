@@ -9,4 +9,4 @@ RUN npm run build
 
 EXPOSE 22
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "quick-start"]

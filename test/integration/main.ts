@@ -4,7 +4,7 @@ import main from "../../src/main"
 import { SingleElimination as single } from "tourneyjs"
 
 export default function () {
-  describe("Main Tests", function () {
+  describe("| Main", () => {
 
     function mockWorkers() {
       return () => {
@@ -68,7 +68,7 @@ export default function () {
       return { gitlab_id: i + 1 }
     })
 
-    before('Populate the database with users', function () {
+    before("Populate the database with users", function () {
       return Promise.all(initialTeams.map((team) =>
         db.query("team").insert({ gitlab_id: team.gitlab_id }, "id")
           .then(_ => { })
@@ -96,5 +96,6 @@ export default function () {
           db.query("team").del().then(_ => { })
         ]))
     })
+
   })
 }
