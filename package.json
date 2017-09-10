@@ -10,6 +10,8 @@
     "clean:src": "rimraf src/**/*.js",
     "clean:test": "rimraf test/**/*.js",
     "docs": "apidoc --input src/ --output docs/",
+    "lint": "tslint --format verbose --project ./tsconfig.json",
+    "lint-fix": "tslint --fix --format verbose --project ./tsconfig.json",
     "start-dev": "npm run build && node --inspect src/app.js",
     "setup": "npm install",
     "test": "npm run build && mocha --colors test/"
