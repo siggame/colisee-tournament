@@ -1,43 +1,44 @@
-const _ = require('lodash');
-import * as logger from "./logger";
-import * as db from "./dbUtil";
-import { SingleElimination as single, Settings as settings } from "../node_modules/tourneyjs";
+import * as dotenv from "dotenv";
+dotenv.config();
 
-export class App {
-  tournament: single;
+import * as bodyParser from "body-parser";
+import * as cors from "cors";
+import { NextFunction, Request, Response } from "express";
+import * as express from "express";
+import { HttpError } from "http-errors";
+import * as _ from "lodash";
+import * as winston from "winston";
 
-  constructor() { }
+import * as handlers from "./handlers";
+import { PORT } from "./vars";
 
-  prepareTournament(settings?: settings): Promise<single> {
-    return new Promise((resolve, reject) => {
-      db.getTeams()
-        .then((teams: any[]) => {
-          const team_ids = teams.map((team) => { return team.id });
-          this.tournament = new single(team_ids, settings);
-          return this.tournament
-        })
-        .then(resolve)
-        .catch(reject)
-    })
-  }
+winston.configure({
+  transports: [
+    new (winston.transports.Console)({
+      timestamp: true,
+    }),
+  ],
+});
 
-  poll(id: number) {
-    return new Promise((resolve, reject) => {
-      function recursive_poller() {
-        return () => {
-          db.getFinishedGameResult(id)
-            .then(result => {
-              if (result === null) {
-                setTimeout(recursive_poller(), 250);
-              }
-              else {
-                resolve(result);
-              }
-            })
-            .catch(reject)
-        }
-      }
-      setTimeout(recursive_poller(), 250);
-    })
-  }
-}
+const app = express();
+
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use((req, res, next) => {
+  winston.info(`${req.method} ${req.url}`);
+  next();
+});
+
+app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
+  winston.error(err.toString());
+  res.status(err.statusCode).end(err.name);
+});
+
+app.post("/create/:name", ...handlers.createTournament);
+app.post("/status/:name", ...handlers.tournamentStatus);
+
+app.listen(PORT, () => {
+  winston.info(`Listening on port ${PORT}...`);
+});

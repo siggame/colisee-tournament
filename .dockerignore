@@ -1,3 +1,15 @@
-.git/*
+.git/
+.gitattributes
+.gitignore
+
+.travis.yml
+
+.dockerignore
+Dockerfile
+
 docs/
 node_modules/
+
+README.md
+
+test.sh

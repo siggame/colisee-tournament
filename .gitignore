@@ -1,5 +1,6 @@
 # Compiled Javascript
+docs/
 node_modules/
+
 *.js
 *.log
-.vagrant/*
