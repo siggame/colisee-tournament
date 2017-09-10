@@ -10,6 +10,8 @@ Dockerfile
 docs/
 node_modules/
 
+*.js
+
 README.md
 
 test.sh
