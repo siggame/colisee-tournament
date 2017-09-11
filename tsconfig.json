@@ -2,11 +2,10 @@
     "compilerOptions": {
         "module": "commonjs",
         "target": "es6",
-        "sourceMap": false,
         "strict": true
     },
     "include": [
-        "src/",
-        "test/"
+        "src/**/*",
+        "test/**/*"
     ]
 }
