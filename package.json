@@ -6,13 +6,13 @@
   "scripts": {
     "build": "tsc",
     "clean": "npm run clean:src && npm run clean:test && npm run clean:misc",
-    "clean:misc": "rimraf node_modules/ dist/",
+    "clean:misc": "rimraf release/ node_modules/",
     "clean:src": "rimraf src/*.js src/**/*.js",
     "clean:test": "rimraf test/*.js test/**/*.js",
     "docs": "apidoc --input src/ --output docs/",
     "lint": "tslint --format verbose --project ./tsconfig.json",
     "lint-fix": "tslint --fix --format verbose --project ./tsconfig.json",
-    "start": "node src/app.js",
+    "start": "node src/index.js",
     "start-dev": "npm run build && node --inspect src/app.js",
     "setup": "npm install",
     "test": "npm run build && mocha --colors test/"
