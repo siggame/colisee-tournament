@@ -1,12 +1,10 @@
 import * as dotenv from "dotenv";
 dotenv.config();
 
-import * as bodyParser from "body-parser";
 import * as cors from "cors";
 import { NextFunction, Request, Response } from "express";
 import * as express from "express";
 import { HttpError } from "http-errors";
-import * as _ from "lodash";
 import * as winston from "winston";
 
 import * as handlers from "./handlers";
@@ -23,8 +21,6 @@ winston.configure({
 const app = express();
 
 app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
   winston.info(`${req.method} ${req.url}`);
