@@ -6,9 +6,9 @@
   "scripts": {
     "build": "tsc",
     "clean": "npm run clean:src && npm run clean:test && npm run clean:misc",
-    "clean:misc": "rimraf -rf node_modules/ dist/",
-    "clean:src": "rimraf src/**/*.js",
-    "clean:test": "rimraf test/**/*.js",
+    "clean:misc": "rimraf node_modules/ dist/",
+    "clean:src": "rimraf src/*.js src/**/*.js",
+    "clean:test": "rimraf test/*.js test/**/*.js",
     "docs": "apidoc --input src/ --output docs/",
     "lint": "tslint --format verbose --project ./tsconfig.json",
     "lint-fix": "tslint --fix --format verbose --project ./tsconfig.json",
@@ -35,28 +35,26 @@
     "@types/dotenv": "^2.0.22",
     "@types/express": "^4.0.37",
     "@types/http-errors": "^1.6.1",
-    "@types/knex": "0.0.40",
     "@types/lodash": "^4.14.74",
     "@types/mocha": "^2.2.43",
     "@types/node": "^7.0.43",
     "@types/winston": "^2.3.5",
     "apidoc": "^0.17.6",
     "chai": "^3.5.0",
-    "mocha": "^3.5.0",
+    "mocha": "^3.5.2",
     "rimraf": "^2.6.1",
     "typescript": "^2.5.2"
   },
   "dependencies": {
     "@siggame/colisee-lib": "^0.2.5",
+    "@siggame/tourneyjs": "^0.1.2",
     "body-parser": "^1.18.0",
     "cors": "^2.8.4",
     "dotenv": "^4.0.0",
     "express": "^4.15.4",
     "http-errors": "^1.6.2",
-    "knex": "^0.12.9",
     "lodash": "^4.17.4",
     "pg": "^6.4.2",
-    "tourneyjs": "0.0.3",
     "winston": "^2.3.1"
   }
 }
