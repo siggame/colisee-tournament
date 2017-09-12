@@ -1,14 +1,8 @@
-sudo: required
-
-services:
-  - docker
+language: node_js
+node_js:
+    - node
 
 before_script:
-  - docker build -t siggame/colisee-tournament .
-  - docker run --name tournament-db --publish 5433:5432 --detach siggame/colisee-db:stable
-
+    - npm install
 script:
-  - docker run --rm -e POSTGRES_PORT=5433 --network host siggame/colisee-tournament npm run test
-
-after_script:
-  - docker stop tournament-db
+    - npm test

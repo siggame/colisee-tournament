@@ -35,6 +35,10 @@ app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
 app.post("/create/:name", ...handlers.createTournament);
 app.post("/status/:name", ...handlers.tournamentStatus);
 
-app.listen(PORT, () => {
-  winston.info(`Listening on port ${PORT}...`);
-});
+export default () => {
+  app.listen(PORT, () => {
+    winston.info(`Listening on port ${PORT}...`);
+  });
+};
+
+export { app };
