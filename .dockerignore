@@ -1,15 +1,28 @@
+# Editors & Environment
+.vagrant/
+.vscode/
+.idea/
+.env
+tslint.json
+
+# NodeJS & NPM
+node_modules/
+*.js
+
+# Git
 .git/
-.gitattributes
 .gitignore
+.gitattributes
 
-.travis.yml
-
+# Docker
 .dockerignore
 Dockerfile
 
-docs/
-node_modules/
+*.log
 
-*.js
-
+CHANGELOG.md
 README.md
+TODO.md
+docs/
+release/
+tmp/

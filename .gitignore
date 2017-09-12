@@ -1,6 +1,17 @@
-# Compiled Javascript
-docs/
+# Editors & Environment
+.idea/
+.vscode/
+.vagrant/
+.env
+
+# Compiled & Generated
+*.js
+
+# NPM
 node_modules/
 
-*.js
 *.log
+
+docs/
+release/
+tmp/
