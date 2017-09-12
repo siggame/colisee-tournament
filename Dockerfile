@@ -1,15 +1,29 @@
-FROM node:alpine
-LABEL maintainer "siggame@mst.edu"
+# See http://training.play-with-docker.com/node-zeit-pkg/
 
-RUN mkdir -p /usr/src/app
+FROM node:latest AS build
+
+RUN npm install -g pkg pkg-fetch
+ENV NODE node8
+ENV PLATFORM alpine
+ENV ARCH x64
+RUN /usr/local/bin/pkg-fetch ${NODE} ${PLATFORM} ${ARCH}
+
+RUN mkdir -p /usr/src/app/release
 WORKDIR /usr/src/app
 
 COPY package.json .
 COPY package-lock.json .
 RUN npm install
+COPY . /usr/src/app
+RUN npm run build:dist && pkg -t ${NODE}-${PLATFORM}-${ARCH} --output tournament release/index.js
 
-COPY . .
+FROM alpine:latest
 
-RUN npm run build
+WORKDIR /app
+ENV NODE_ENV=production
 
-CMD ["npm", "run", "start"]
+RUN apk update && apk add --no-cache libstdc++ libgcc
+
+COPY --from=build /usr/src/app/tournament /app/tournament
+
+CMD ["/app/tournament"]
