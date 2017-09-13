@@ -2,12 +2,12 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 import * as cors from "cors";
-import { NextFunction, Request, Response } from "express";
+import { ErrorRequestHandler, RequestHandler } from "express";
 import * as express from "express";
 import { HttpError } from "http-errors";
 import * as winston from "winston";
 
-import * as handlers from "./handlers";
+import { createTournament, tournamentStatus } from "./handlers";
 import { PORT } from "./vars";
 
 winston.configure({
@@ -20,20 +20,22 @@ winston.configure({
 
 const app = express();
 
-app.use(cors());
-
-app.use((req, res, next) => {
-  winston.info(`${req.method} ${req.url}`);
-  next();
-});
-
-app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
+const errorHandler: ErrorRequestHandler = (err: HttpError, req, res, next) => {
   winston.error(err.toString());
-  res.status(err.statusCode).end(err.name);
-});
+  res.status(err.statusCode).end(err.message);
+};
 
-app.post("/create/:name", ...handlers.createTournament);
-app.post("/status/:name", ...handlers.tournamentStatus);
+const logger: RequestHandler = (req, res, next) => {
+  winston.info(`${req.method}\t${req.url}`);
+  next();
+};
+
+app.use(cors());
+app.use(logger);
+app.use(errorHandler);
+
+app.post("/create/:name", createTournament);
+app.post("/status/:name", tournamentStatus);
 
 export default () => {
   app.listen(PORT, () => {
