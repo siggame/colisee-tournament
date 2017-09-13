@@ -1,5 +1,5 @@
 import { db } from "@siggame/colisee-lib";
-import { SingleEliminationTournament as SETourney } from "@siggame/tourneyjs";
+import { IMatchResult, SingleEliminationTournament as SETourney } from "@siggame/tourneyjs";
 import { Request, RequestHandler } from "express";
 import { BadRequest, Conflict, NotFound } from "http-errors";
 import { JoinClause, QueryBuilder } from "knex";
@@ -41,13 +41,28 @@ async function getEligibleSubmissions() {
 }
 
 export const createTournament: RequestHandler =
-    catchError(async (req, res, next) => {
+    catchError(async (req: Request, res, next) => {
         assertNameExists(req);
         if (scheduler.tournaments.has(req.params.name)) {
             throw new Conflict(`Tournament with name ${req.params.name} already exists`);
         }
-        const tourney = new SETourney(await getEligibleSubmissions());
+        const tourney = new SETourney(await getEligibleSubmissions(), req.body.settings);
         scheduler.tournaments.set(req.params.name, tourney);
+        tourney.on("finished",
+            ([{ winner: first, losers: [second] }, bronzeFinal]: IMatchResult<db.Submission>[]) => {
+                winston.info(`Winner: ${first.teamId}`);
+                winston.info(`Runner Up: ${second.teamId}`);
+                tourney.resume();
+                if (bronzeFinal) {
+                    const { winner: third, losers: [fourth] } = bronzeFinal;
+                    winston.info(`Third: ${third.teamId}`);
+                    winston.info(`Fourth: ${fourth.teamId}`);
+                    scheduler.stop(req.params.name);
+                }
+            }).when("error", () => {
+                scheduler.stop(req.params.name);
+            });
+        scheduler.play(req.params.name);
         winston.info(`number of tourneys scheduled: ${scheduler.tournaments.size}`);
         res.json(tourney.teams);
     });
