@@ -8,7 +8,7 @@ import * as express from "express";
 import { HttpError } from "http-errors";
 import * as winston from "winston";
 
-import { createTournament, tournamentStatus } from "./handlers";
+import { createTournament, tournamentStatus, tournamentStatuses } from "./handlers";
 import { PORT } from "./vars";
 
 winston.configure({
@@ -36,7 +36,8 @@ app.use(logger);
 app.use(errorHandler);
 
 app.post("/create/:name", bodyParser.json(), createTournament);
-app.post("/status/:name", tournamentStatus);
+app.get("/status/:name", tournamentStatus);
+app.get("/status/", tournamentStatuses);
 
 export default () => {
   app.listen(PORT, () => {

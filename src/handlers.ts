@@ -70,9 +70,18 @@ export const createTournament: RequestHandler =
 export const tournamentStatus: RequestHandler =
     catchError(async (req, res, next) => {
         assertNameExists(req);
-        if (scheduler.tournaments.has(req.params.name)) {
-            res.end(`found tournament ${req.params.name}`);
+        const tourney = scheduler.tournaments.get(req.params.name);
+        if (tourney) {
+            res.json([req.params.name, tourney.status]);
         } else {
             throw new NotFound(`No tournament with name ${req.params.name}`);
         }
+    });
+
+export const tournamentStatuses: RequestHandler =
+    catchError(async (req, res, next) => {
+        res.json([...scheduler.tournaments.entries()].map(([name, tourney]) => {
+            return [name, tourney.status];
+        }));
+        res.end();
     });
