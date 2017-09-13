@@ -1,6 +1,6 @@
 # siggame/colisee-tournament
 
-A brief description of the project.
+Service to generate a tournament schedule and monitor the progress of the tournament.
 
 [![Travis](https://img.shields.io/travis/siggame/colisee-tournament.svg?style=flat-square)](https://travis-ci.org/siggame/colisee-tournament)
 [![Docker Pulls](https://img.shields.io/docker/pulls/siggame/colisee-tournament.svg?style=flat-square)](https://hub.docker.com/r/siggame/colisee-tournament/)
@@ -10,6 +10,7 @@ A brief description of the project.
 [![NPM Total Downloads](https://img.shields.io/npm/dt/@siggame/colisee-tournament.svg?style=flat-square)](https://www.npmjs.com/package/@siggame/colisee-tournament)
 
 ## Table Of Contents
+
 - [Description](#description)
 - [Getting Started](#getting-started)
 - [Usage](#usage)
@@ -24,13 +25,42 @@ A long description of the project.
 
 ## Getting Started
 
-How to get/install the service or library.
+Using docker.
+
+```bash
+docker pull siggame/colisee-tournament
+```
+
+```npm
+npm install
+```
 
 ## Usage
 
-Information about how to use the service or library.
+Create `.env` file. (see [.env options](#environment-options))
+
+```bash
+echo "PORT=8080" > .env
+```
+
+Using docker.
+
+```bash
+docker run --init --rm --env-file .env -p 8080:8080 siggame/colisee-tournament
+```
+
+Using npm.
+
+```bash
+npm run start:prod
+```
+
+### Environment Options
+
+- `PORT`: the port the tournament scheduler will listen on.
 
 ## Contributors
+
 - [Russley Shaw](https://github.com/russleyshaw)
 - [user404d](https://github.com/user404d)
 - [Hannah Reinbolt](https://github.com/LoneGalaxy)
