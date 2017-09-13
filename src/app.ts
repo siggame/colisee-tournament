@@ -1,6 +1,7 @@
 import * as dotenv from "dotenv";
 dotenv.config();
 
+import * as bodyParser from "body-parser";
 import * as cors from "cors";
 import { ErrorRequestHandler, RequestHandler } from "express";
 import * as express from "express";
@@ -34,7 +35,7 @@ app.use(cors());
 app.use(logger);
 app.use(errorHandler);
 
-app.post("/create/:name", createTournament);
+app.post("/create/:name", bodyParser.json(), createTournament);
 app.post("/status/:name", tournamentStatus);
 
 export default () => {
