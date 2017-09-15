@@ -1,4 +1,4 @@
-export function catchError<T>(fn: (...args: any[]) => Promise<T>) {
+export function catchError<T extends Function>(fn: T): (...args: any[]) => Promise<any> {
     return async (...args: any[]) => fn(...args).catch(args[2]);
 }
 

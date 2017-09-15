@@ -41,7 +41,7 @@ async function getEligibleSubmissions() {
 }
 
 export const createTournament: RequestHandler =
-    catchError(async (req: Request, res, next) => {
+    catchError<RequestHandler>(async (req, res, next) => {
         assertNameExists(req);
         if (scheduler.tournaments.has(req.params.name)) {
             throw new Conflict(`Tournament with name ${req.params.name} already exists`);
@@ -52,15 +52,11 @@ export const createTournament: RequestHandler =
             ([{ winner: first, losers: [second] }, bronzeFinal]: IMatchResult<db.Submission>[]) => {
                 winston.info(`Winner: ${first.teamId}`);
                 winston.info(`Runner Up: ${second.teamId}`);
-                tourney.resume();
                 if (bronzeFinal) {
                     const { winner: third, losers: [fourth] } = bronzeFinal;
                     winston.info(`Third: ${third.teamId}`);
                     winston.info(`Fourth: ${fourth.teamId}`);
-                    scheduler.stop(req.params.name);
                 }
-            }).when("error", () => {
-                scheduler.stop(req.params.name);
             });
         scheduler.play(req.params.name);
         winston.info(`number of tourneys scheduled: ${scheduler.tournaments.size}`);
@@ -68,7 +64,7 @@ export const createTournament: RequestHandler =
     });
 
 export const tournamentStatus: RequestHandler =
-    catchError(async (req, res, next) => {
+    catchError<RequestHandler>(async (req, res, next) => {
         assertNameExists(req);
         const tourney = scheduler.tournaments.get(req.params.name);
         if (tourney) {
@@ -79,9 +75,10 @@ export const tournamentStatus: RequestHandler =
     });
 
 export const tournamentStatuses: RequestHandler =
-    catchError(async (req, res, next) => {
+    catchError<RequestHandler>(async (req, res, next) => {
         res.json([...scheduler.tournaments.entries()].map(([name, tourney]) => {
-            return [name, tourney.status];
+            const tourneyStatus = tourney.toString();
+            return { name, tourneyStatus };
         }));
         res.end();
     });
