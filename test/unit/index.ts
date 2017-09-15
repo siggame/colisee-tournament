@@ -1,7 +1,9 @@
-import app from "./app"
+import sanity from "./sanity";
 
-export default function () {
-  describe("Unit", () => {
-    app()
-  })
-}
+export default () => {
+
+    describe("Unit Tests |", () => {
+        sanity();
+    });
+
+};

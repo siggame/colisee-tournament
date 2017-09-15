@@ -1,3 +1,28 @@
-.git/*
-docs/
+# Editors & Environment
+.vagrant/
+.vscode/
+.idea/
+.env
+tslint.json
+
+# NodeJS & NPM
 node_modules/
+*.js
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Docker
+.dockerignore
+Dockerfile
+
+*.log
+
+CHANGELOG.md
+README.md
+TODO.md
+docs/
+release/
+tmp/

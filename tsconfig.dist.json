@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "outDir": "release",
+        "strict": true,
+        "target": "es6"
+    },
+    "include": [
+        "src/"
+    ]
+}
