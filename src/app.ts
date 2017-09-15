@@ -37,7 +37,9 @@ app.use(errorHandler);
 
 app.post("/create/:name", bodyParser.json(), createTournament);
 app.get("/status/:name", tournamentStatus);
-app.get("/status/", tournamentStatuses);
+app.get("/status", tournamentStatuses);
+app.get("/start/:name", (req, res) => { res.end(); });
+app.get("/stop/:name", (req, res) => { res.end(); });
 
 export default () => {
   app.listen(PORT, () => {
