@@ -1,3 +1,3 @@
-import * as _ from "lodash";
+import { defaultTo, toNumber } from "lodash";
 
-export const PORT: number = _.defaultTo<number>(_.toNumber(process.env.PORT), 8080);
+export const PORT: number = defaultTo<number>(toNumber(process.env.PORT), 8080);
