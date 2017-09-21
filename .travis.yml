@@ -6,3 +6,15 @@ before_script:
     - npm install
 script:
     - npm test
+
+before_deploy:
+    - npm install -g typedoc
+    - typedoc --tsconfig tsconfig.dist.json --mode modules --out docs && touch docs/.nojekyll
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  local_dir: docs/
+  github_token: $GH_TOKEN
+  on:
+    branch: master

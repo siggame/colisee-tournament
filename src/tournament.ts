@@ -6,6 +6,12 @@ import { delay } from "./helpers";
 
 const CREATE = -1;
 
+/**
+ * Schedules tournaments and monitors progress of tournaments.
+ * 
+ * @export
+ * @class TournamentScheduler
+ */
 export class TournamentScheduler {
 
     public tournaments: Map<string, ITournament<db.Submission>>;
@@ -14,6 +20,11 @@ export class TournamentScheduler {
         this.tournaments = new Map<string, ITournament<db.Submission>>();
     }
 
+    /**
+     * Plays a match with given
+     * 
+     * @memberof TournamentScheduler
+     */
     play(name: string) {
         const tournament = this.tournaments.get(name);
         if (tournament) {
@@ -66,6 +77,11 @@ export class TournamentScheduler {
         }
     }
 
+    /**
+     * Stops tournament with given name.
+     * 
+     * @memberof TournamentScheduler
+     */
     stop(name: string) {
         const tournament = this.tournaments.get(name);
         if (tournament) {
@@ -76,6 +92,11 @@ export class TournamentScheduler {
         }
     }
 
+    /**
+     * Removes tournament with given name.
+     * 
+     * @memberof TournamentScheduler
+     */
     remove(name: string) {
         if (this.stop(name)) {
             return this.tournaments.delete(name);
