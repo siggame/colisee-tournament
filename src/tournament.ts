@@ -21,6 +21,21 @@ export class TournamentScheduler {
     }
 
     /**
+     * Pauses tournament with given name.
+     * 
+     * @memberof TournamentScheduler
+     */
+    pause(name: string) {
+        const tournament = this.tournaments.get(name);
+        if (tournament) {
+            tournament.pause();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Plays a match with given
      * 
      * @memberof TournamentScheduler
@@ -78,21 +93,6 @@ export class TournamentScheduler {
     }
 
     /**
-     * Stops tournament with given name.
-     * 
-     * @memberof TournamentScheduler
-     */
-    stop(name: string) {
-        const tournament = this.tournaments.get(name);
-        if (tournament) {
-            tournament.stop();
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * Removes tournament with given name.
      * 
      * @memberof TournamentScheduler
@@ -104,4 +104,36 @@ export class TournamentScheduler {
             return false;
         }
     }
+
+    /**
+     * Resumes tournament with given name.
+     * 
+     * @memberof TournamentScheduler
+     */
+    resume(name: string) {
+        const tournament = this.tournaments.get(name);
+        if (tournament) {
+            tournament.resume();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Stops tournament with given name.
+     * 
+     * @memberof TournamentScheduler
+     */
+    private stop(name: string) {
+        const tournament = this.tournaments.get(name);
+        if (tournament) {
+            tournament.stop();
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
+
+export const scheduler = new TournamentScheduler();

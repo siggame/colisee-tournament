@@ -1,15 +1,13 @@
 import { db } from "@siggame/colisee-lib";
 import { IMatchResult, SingleEliminationTournament as SETourney } from "@siggame/tourneyjs";
 import { Request, RequestHandler } from "express";
-import { BadRequest, Conflict, NotFound } from "http-errors";
+import { BadRequest, Conflict, InternalServerError, NotFound } from "http-errors";
 import { JoinClause, QueryBuilder } from "knex";
 import { isNil, isString } from "lodash";
 import * as winston from "winston";
 
 import { catchError } from "./helpers";
-import { TournamentScheduler } from "./tournament";
-
-export const scheduler = new TournamentScheduler();
+import { scheduler, TournamentScheduler } from "./tournament";
 
 function assertNameExists(req: Request) {
     if (isNil(req.params.name)) {
@@ -63,12 +61,45 @@ export const createTournament: RequestHandler =
         res.json(tourney.teams);
     });
 
+export const tournamentPause: RequestHandler =
+    catchError<RequestHandler>(async (req, res, next) => {
+        assertNameExists(req);
+        if (scheduler.pause(req.params.name)) {
+            res.send(`Tournament, ${req.params.name}, was successfully paused.`);
+        } else {
+            throw new NotFound(`No tournament with name ${req.params.name}`);
+        }
+        res.end();
+    });
+
+export const tournamentRemove: RequestHandler =
+    catchError<RequestHandler>(async (req, res, next) => {
+        assertNameExists(req);
+        if (scheduler.remove(req.params.name)) {
+            res.send(`Tournament, ${req.params.name}, was successfully removed.`);
+        } else {
+            throw new NotFound(`No tournament with name ${req.params.name}`);
+        }
+        res.end();
+    });
+
+export const tournamentResume: RequestHandler =
+    catchError<RequestHandler>(async (req, res, next) => {
+        assertNameExists(req);
+        if (scheduler.resume(req.params.name)) {
+            res.send(`Tournament, ${req.params.name}, was successfully resumed.`);
+        } else {
+            throw new NotFound(`No tournament with name ${req.params.name}`);
+        }
+        res.end();
+    });
+
 export const tournamentStatus: RequestHandler =
     catchError<RequestHandler>(async (req, res, next) => {
         assertNameExists(req);
         const tourney = scheduler.tournaments.get(req.params.name);
         if (tourney) {
-            res.json([req.params.name, tourney.status]);
+            res.json({ name: req.params.name, tourneyStatus: tourney.status });
         } else {
             throw new NotFound(`No tournament with name ${req.params.name}`);
         }
