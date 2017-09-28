@@ -6,8 +6,6 @@ Service to generate a tournament schedule and monitor the progress of the tourna
 [![Docker Pulls](https://img.shields.io/docker/pulls/siggame/colisee-tournament.svg?style=flat-square)](https://hub.docker.com/r/siggame/colisee-tournament/)
 [![GitHub Tag](https://img.shields.io/github/tag/siggame/colisee-tournament.svg?style=flat-square)](https://github.com/siggame/colisee-tournament/tags)
 [![Dependencies](https://img.shields.io/david/siggame/colisee-tournament.svg)](https://github.com/siggame/colisee-tournament)
-[![NPM Version](https://img.shields.io/npm/@siggame/colisee-tournament.svg?style=flat-square)](https://www.npmjs.com/package/@siggame/colisee-tournament)
-[![NPM Total Downloads](https://img.shields.io/npm/dt/@siggame/colisee-tournament.svg?style=flat-square)](https://www.npmjs.com/package/@siggame/colisee-tournament)
 
 ## Table Of Contents
 
@@ -54,6 +52,65 @@ Using npm.
 ```bash
 npm run start:prod
 ```
+
+### API
+
+#### `POST /create/:name`
+
+Create a tournament with the given name and settings.
+
+##### Query Paramaters:
+
+name: `string (required)`
+
+##### Body:
+
+```js
+Content-Type: application/json
+
+{
+  settings: {
+    bronzeFinals: boolean;
+    randomize: boolean;
+  }
+}
+```
+
+#### `GET /pause/:name`
+
+Pause the tournament with the given name.
+
+##### Query Parameters:
+
+name: `string (required)`
+
+#### `DELETE /remove/:name`
+
+Remove the tournament with the given name.
+
+##### Query Parameters:
+
+name: `string (required)`
+
+#### `GET /resume/:name`
+
+Resume a paused tournament with the given name.
+
+##### Query Parameters:
+
+name: `string (required)`
+
+#### `GET /status/:name`
+
+Get the status of a tournament with the given name.
+
+##### Query Parameters:
+
+name: `string (required)`
+
+#### `GET /status`
+
+Get the statuses of all tournaments.
 
 ### Environment Options
 
