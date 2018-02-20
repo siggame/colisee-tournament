@@ -1,13 +1,13 @@
 import { db } from "@siggame/colisee-lib";
 import { IMatchResult, SingleEliminationTournament as SETourney } from "@siggame/tourneyjs";
 import { Request, RequestHandler } from "express";
-import { BadRequest, Conflict, InternalServerError, NotFound } from "http-errors";
-import { JoinClause, QueryBuilder } from "knex";
+import { BadRequest, Conflict, NotFound } from "http-errors";
+import { QueryBuilder } from "knex";
 import { isNil, isString } from "lodash";
 import * as winston from "winston";
 
 import { catchError } from "./helpers";
-import { scheduler, TournamentScheduler } from "./tournament";
+import { scheduler } from "./tournament";
 
 function assertNameExists(req: Request) {
     if (isNil(req.params.name)) {
@@ -21,20 +21,20 @@ async function getEligibleSubmissions() {
     const eligibleTeamIds = await db.connection("teams")
         .select("id")
         .where({ is_eligible: true })
-        .then((rows: { id: number }[]) => rows.map((row) => row.id));
-    const submissions = await db.connection
-        .select("submissions.id", "submissions.team_id", "submissions.image_name",
-        "submissions.status", "submissions.created_at", "submissions.updated_at")
-        .from(function (this: QueryBuilder) {
-            this.from("submissions as subs")
-                .select("subs.id as subId", "subs.team_id as teamId", db.connection.raw("max(subs.version) as recent_version"))
-                .where({ status: "finished" })
-                .groupBy("subId")
-                .as("recent_subs");
-        }).join("submissions", function (this: JoinClause) {
-            this.on("recent_subs.teamId", "submissions.team_id").andOn("recent_subs.recent_version", "submissions.version");
-        }).whereIn("submissions.team_id", eligibleTeamIds)
-        .then(db.rowsToSubmissions);
+        .then((ids: { id: number }[]) => ids.map(({ id }) => id))
+        .catch((error) => { winston.error("Eligible teams error"); throw error; });
+    const submissions = await db.connection.from((query: QueryBuilder) => {
+        return query.from("submissions")
+            .select("team_id as teamId", db.connection.raw("max(version) as recent_version"))
+            .where({ status: "finished" })
+            .whereIn("team_id", eligibleTeamIds)
+            .groupBy("teamId")
+            .as("recent_subs");
+    }).join("submissions as subs", function () {
+        this.on({ "subs.team_id": "recent_subs.teamId" }).andOn({ "subs.version": "recent_subs.recent_version" });
+    }).select("*")
+        .then(db.rowsToSubmissions)
+        .catch((error) => { winston.error("Most recent eligible team submissions failed"); throw error; });
     return submissions;
 }
 
