@@ -9,7 +9,7 @@ script:
 
 before_deploy:
     - npm install -g typedoc
-    - typedoc --tsconfig tsconfig.dist.json --mode modules --out docs && touch docs/.nojekyll
+    - typedoc --tsconfig tsconfig.dist.json --mode modules --out docs src && touch docs/.nojekyll
 
 deploy:
   provider: pages
