@@ -31,7 +31,7 @@
   },
   "homepage": "https://github.com/siggame/colisee-tournament#readme",
   "devDependencies": {
-    "@siggame/colisee-tslint": "^1.0.3",
+    "@siggame/colisee-tslint": "^1.0.4",
     "@types/body-parser": "0.0.33",
     "@types/chai": "^3.5.2",
     "@types/cors": "^2.8.3",
@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "@siggame/colisee-lib": "^0.3.1",
-    "@siggame/tourneyjs": "^0.3.2",
+    "@siggame/tourneyjs": "^0.3.3",
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
     "dotenv": "^4.0.0",
