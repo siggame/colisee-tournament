@@ -5,7 +5,8 @@ Service to generate a tournament schedule and monitor the progress of the tourna
 [![Travis](https://img.shields.io/travis/siggame/colisee-tournament.svg?style=flat-square)](https://travis-ci.org/siggame/colisee-tournament)
 [![Docker Pulls](https://img.shields.io/docker/pulls/siggame/colisee-tournament.svg?style=flat-square)](https://hub.docker.com/r/siggame/colisee-tournament/)
 [![GitHub Tag](https://img.shields.io/github/tag/siggame/colisee-tournament.svg?style=flat-square)](https://github.com/siggame/colisee-tournament/tags)
-[![Dependencies](https://img.shields.io/david/siggame/colisee-tournament.svg)](https://github.com/siggame/colisee-tournament)
+[![dependencies Status](https://david-dm.org/siggame/colisee-tournament/status.svg)](https://david-dm.org/siggame/colisee-tournament)
+[![devDependencies Status](https://david-dm.org/siggame/colisee-tournament/dev-status.svg)](https://david-dm.org/siggame/colisee-tournament?type=dev)
 
 ## Table Of Contents
 
