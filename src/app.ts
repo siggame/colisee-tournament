@@ -3,15 +3,12 @@ dotenv.config();
 
 import * as bodyParser from "body-parser";
 import * as cors from "cors";
-import { ErrorRequestHandler, RequestHandler } from "express";
 import * as express from "express";
+import { ErrorRequestHandler, RequestHandler } from "express";
 import { HttpError } from "http-errors";
 import * as winston from "winston";
 
-import {
-  createTournament, tournamentPause, tournamentRemove,
-  tournamentResume, tournamentStatus, tournamentStatuses,
-} from "./handlers";
+import * as tournament from "./Tournament";
 import { PORT } from "./vars";
 
 winston.configure({
@@ -21,8 +18,6 @@ winston.configure({
     }),
   ],
 });
-
-const app = express();
 
 const errorHandler: ErrorRequestHandler = (err: HttpError, req, res, next) => {
   winston.error(err.toString());
@@ -34,16 +29,18 @@ const logger: RequestHandler = (req, res, next) => {
   next();
 };
 
+const app = express();
+
 app.use(cors());
 app.use(logger);
 app.use(errorHandler);
 
-app.post("/create/:name", bodyParser.json(), createTournament);
-app.get("/pause/:name", tournamentPause);
-app.delete("/remove/:name", tournamentRemove);
-app.get("/resume/:name", tournamentResume);
-app.get("/status/:name", tournamentStatus);
-app.get("/status", tournamentStatuses);
+app.post("/create/:name", bodyParser.json(), tournament.create);
+app.get("/pause/:name", tournament.pause);
+app.delete("/remove/:name", tournament.remove);
+app.get("/resume/:name", tournament.resume);
+app.get("/status/:name", tournament.status);
+app.get("/status", tournament.statuses);
 
 export default () => {
   app.listen(PORT, () => {

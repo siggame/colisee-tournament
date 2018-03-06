@@ -2,7 +2,9 @@ import { db } from "@siggame/colisee-lib";
 import { ITournament } from "@siggame/tourneyjs";
 import * as winston from "winston";
 
-import { delay } from "./helpers";
+import { createGame, getEndedGame, updateGame } from "../Games";
+import { createGameSubmissions } from "../GamesSubmissions";
+import { delay } from "../helpers";
 
 const CREATE = -1;
 
@@ -45,26 +47,19 @@ export class TournamentScheduler {
         if (tournament) {
             tournament.play(async (match) => {
                 if (match.id === CREATE) {
-                    match.id = await db.connection("games")
-                        .insert({ status: "queued" }, "*")
-                        .then(db.rowsToGames)
-                        .then(([{ id }]) => id)
-                        .catch((e) => { throw e; });
-                    const gameSubmissions = match.teams.map(({ id: subId }) => ({ game_id: match.id, submission_id: subId }));
-                    await db.connection("games_submissions")
-                        .insert(gameSubmissions)
-                        .catch((e) => { throw e; });
+                    match.id = await createGame("queued");
+                    const gameSubmissions = match.teams.map(({ id: subId }) =>
+                        ({ game_id: match.id, submission_id: subId }),
+                    );
+                    await createGameSubmissions(gameSubmissions);
                 } else {
-                    await db.connection("games").update({ status: "queued" }).where({ id: match.id });
+                    await updateGame("queued", { id: match.id });
                 }
 
                 let finishedGame: db.Game;
                 while (true) {
-                    [finishedGame] = await db.connection("games")
-                        .where({ id: match.id })
-                        .whereIn("status", ["failed", "finished"])
-                        .then(db.rowsToGames);
-                    if (finishedGame === undefined) {
+                    [finishedGame] = await getEndedGame({ id: match.id });
+                    if (finishedGame == null) {
                         await delay(100);
                     } else if (finishedGame && finishedGame.status === "failed") {
                         throw new Error("Game Failed");
