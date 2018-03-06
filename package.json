@@ -1,6 +1,6 @@
 {
   "name": "colisee-tournament",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Micro-service responsible for scheduling games for SIG-Game Colisee tournaments",
   "main": "release",
   "scripts": {
