@@ -68,8 +68,8 @@ export class TournamentScheduler {
                     }
                 }
 
-                const winner = match.teams.reduce((winner, team) => (team.id === finishedGame.winnerId ? team : winner));
-                const losers = match.teams.filter((team) => team.id !== finishedGame.winnerId);
+                const winner = match.teams.reduce((winner, team) => (team.teamId === finishedGame.winnerId ? team : winner));
+                const losers = match.teams.filter((team) => team.teamId !== finishedGame.winnerId);
 
                 return { winner, losers };
             }, (match) => {
